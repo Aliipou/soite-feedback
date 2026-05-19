@@ -1,5 +1,6 @@
 """Shared test fixtures — async DB session, HTTP client, user factories."""
 
+import os
 import uuid
 from collections.abc import AsyncGenerator
 from datetime import UTC, datetime, timedelta
@@ -8,6 +9,7 @@ from typing import Any
 import pytest
 import pytest_asyncio
 from httpx import ASGITransport, AsyncClient
+from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
 from app.database import Base, get_db
@@ -17,8 +19,10 @@ from app.models.user import RefreshToken, StaffUser
 from app.security.jwt import create_access_token, hash_refresh_token
 from app.security.password import hash_password
 
-# ── In-memory SQLite for unit/router tests (no Docker needed) ─────────────────
-TEST_DATABASE_URL = "sqlite+aiosqlite:///:memory:"
+# Use real PostgreSQL when DATABASE_URL points to one (CI), else SQLite (local)
+_db_url = os.environ.get("DATABASE_URL", "")
+TEST_DATABASE_URL = _db_url if "postgresql" in _db_url else "sqlite+aiosqlite:///:memory:"
+_IS_PG = "postgresql" in TEST_DATABASE_URL
 
 test_engine = create_async_engine(TEST_DATABASE_URL, echo=False)
 TestSessionLocal = async_sessionmaker(test_engine, class_=AsyncSession, expire_on_commit=False)
@@ -28,6 +32,8 @@ TestSessionLocal = async_sessionmaker(test_engine, class_=AsyncSession, expire_o
 async def setup_db() -> AsyncGenerator[None, None]:
     """Create all tables before each test, drop after."""
     async with test_engine.begin() as conn:
+        if _IS_PG:
+            await conn.execute(text("CREATE EXTENSION IF NOT EXISTS pgcrypto"))
         await conn.run_sync(Base.metadata.create_all)
     yield
     async with test_engine.begin() as conn:
