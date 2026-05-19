@@ -24,6 +24,7 @@
     "thankyou": {
       "heading": "Kiitos palautteestasi!",
       "subtext": "Palautteesi auttaa meitä kehittämään palveluamme.",
+      "subtextQueued": "Palautteesi on tallennettu laitteelle ja lähetetään automaattisesti, kun verkkoyhteys on jälleen käytettävissä.",
       "countdown": "Näyttö nollautuu {{seconds}} sekunnin kuluttua..."
     },
     "offline": {

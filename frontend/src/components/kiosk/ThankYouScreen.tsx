@@ -3,9 +3,10 @@ import { CountdownBar } from "./CountdownBar";
 
 interface Props {
   onReset: () => void;
+  offlineQueued?: boolean;
 }
 
-export function ThankYouScreen({ onReset }: Props) {
+export function ThankYouScreen({ onReset, offlineQueued = false }: Props) {
   const { t } = useTranslation();
 
   return (
@@ -27,7 +28,7 @@ export function ThankYouScreen({ onReset }: Props) {
             {t("kiosk.thankyou.heading")}
           </h1>
           <p className="text-xl text-kiosk-text-secondary">
-            {t("kiosk.thankyou.subtext")}
+            {t(offlineQueued ? "kiosk.thankyou.subtextQueued" : "kiosk.thankyou.subtext")}
           </p>
         </div>
 

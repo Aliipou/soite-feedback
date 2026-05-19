@@ -19,6 +19,20 @@ Paper feedback forms produced 100+ responses/year. After migrating to a web form
 
 ---
 
+## Survey questions
+
+The kiosk ships with three default questions (editable via the admin panel):
+
+| # | Finnish | English | Type |
+|---|---------|---------|------|
+| 1 | Kuinka tyytyväinen olit saamaasi hoitoon? | How satisfied were you with the care you received? | Scale 1–5 |
+| 2 | Saitko riittävästi tietoa kuntoutuksestasi? | Did you receive enough information about your rehabilitation? | Yes / No |
+| 3 | Haluatko antaa muuta palautetta? | Would you like to give any other feedback? | Free text |
+
+Questions are stored in the database and can be added, reordered, or deactivated at any time without a deploy.
+
+---
+
 ## Quick start
 
 ```bash

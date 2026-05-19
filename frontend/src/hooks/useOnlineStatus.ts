@@ -5,6 +5,11 @@ export function useOnlineStatus(): boolean {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
 
   useEffect(() => {
+    // Drain on mount in case items were queued during a previous offline session
+    if (navigator.onLine) {
+      void drainQueue();
+    }
+
     const handleOnline = () => {
       setIsOnline(true);
       void drainQueue();

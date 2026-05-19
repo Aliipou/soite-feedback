@@ -112,7 +112,7 @@ export function KioskPage() {
           onAnswer={(answer) => void handleAnswer(answer)}
         />
       )}
-      {stage === "thankyou" && <ThankYouScreen onReset={handleReset} />}
+      {stage === "thankyou" && <ThankYouScreen onReset={handleReset} offlineQueued={offlineQueued} />}
     </div>
   );
 }
