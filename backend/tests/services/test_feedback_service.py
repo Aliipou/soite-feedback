@@ -11,7 +11,10 @@ from app.models.feedback import FeedbackAnswer, FeedbackSubmission
 from app.models.question import Question
 from app.schemas.feedback import AnswerIn, FeedbackSubmitIn
 from app.services.feedback import FeedbackValidationError, create_submission
-from tests.conftest import build_feedback_payload
+from tests.conftest import _IS_PG, build_feedback_payload
+
+# On SQLite, text answers are skipped (pgcrypto not available)
+_EXPECTED_ANSWERS_FOR_ACTIVE_QUESTIONS = 3 if _IS_PG else 2
 
 
 def _make_payload(questions: list[Question], **overrides) -> FeedbackSubmitIn:
@@ -37,7 +40,7 @@ class TestCreateSubmission:
         answers = await db.execute(
             select(FeedbackAnswer).where(FeedbackAnswer.submission_id == result.id)
         )
-        assert len(answers.scalars().all()) == 3
+        assert len(answers.scalars().all()) == _EXPECTED_ANSWERS_FOR_ACTIVE_QUESTIONS
 
     async def test_idempotency_same_submission_id_returns_existing(
         self, db: AsyncSession, active_questions: list[Question]
@@ -95,14 +98,12 @@ class TestCreateSubmission:
         with pytest.raises(FeedbackValidationError, match="yesno"):
             await create_submission(db, payload, uuid.uuid4())
 
-    async def test_unknown_question_id_raises(
-        self, db: AsyncSession, active_questions: list[Question]
-    ) -> None:
+    async def test_unknown_question_id_raises(self, db: AsyncSession) -> None:
         """Payload referencing a non-existent question_id raises FeedbackValidationError."""
-        answers = [AnswerIn(question_id=uuid.uuid4(), int_value=3)]
+        # No active questions in DB → missing-answer check skipped; unknown ID check fires
         payload = FeedbackSubmitIn(
             submission_id=uuid.uuid4(),
-            answers=answers,
+            answers=[AnswerIn(question_id=uuid.uuid4(), int_value=3)],
             submitted_at_local=datetime.now(UTC),
         )
         with pytest.raises(FeedbackValidationError, match="not found or inactive"):
@@ -147,6 +148,7 @@ class TestCreateSubmission:
         result = await create_submission(db, payload, uuid.uuid4())
         assert result.id is not None
 
+    @pytest.mark.skipif(not _IS_PG, reason="requires PostgreSQL pgcrypto")
     async def test_text_value_over_500_chars_truncated(
         self, db: AsyncSession, text_question: Question, scale5_question: Question
     ) -> None:
@@ -164,6 +166,7 @@ class TestCreateSubmission:
         result = await create_submission(db, payload, uuid.uuid4())
         assert result.id is not None
 
+    @pytest.mark.skipif(not _IS_PG, reason="requires PostgreSQL pgcrypto")
     async def test_xss_in_text_value_is_stripped(
         self, db: AsyncSession, text_question: Question, scale5_question: Question
     ) -> None:

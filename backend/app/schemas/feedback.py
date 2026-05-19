@@ -9,10 +9,10 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator, model_valida
 class AnswerIn(BaseModel):
     """Single answer within a feedback submission."""
 
-    model_config = ConfigDict(strict=True)
+    model_config = ConfigDict(strict=False)
 
     question_id: uuid.UUID
-    int_value: int | None = Field(default=None, ge=0, le=5)
+    int_value: int | None = Field(default=None, ge=0)
     text_value: str | None = Field(default=None, max_length=500)
 
     @model_validator(mode="after")
@@ -26,7 +26,7 @@ class AnswerIn(BaseModel):
 class FeedbackSubmitIn(BaseModel):
     """Request body for POST /feedback."""
 
-    model_config = ConfigDict(strict=True)
+    model_config = ConfigDict(strict=False)
 
     submission_id: uuid.UUID
     answers: list[AnswerIn] = Field(min_length=1)

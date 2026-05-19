@@ -169,6 +169,9 @@ async def get_freetext_answers(
     )
     total = count_result.scalar_one()
 
+    if total == 0:
+        return 0, []
+
     offset = (page - 1) * per_page
     rows = await db.execute(
         text(

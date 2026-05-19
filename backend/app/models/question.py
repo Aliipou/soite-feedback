@@ -4,8 +4,7 @@ import uuid
 from datetime import datetime
 from typing import Literal
 
-from sqlalchemy import Boolean, DateTime, SmallInteger, String, Text, func
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import Boolean, DateTime, SmallInteger, String, Text, Uuid, func
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.database import Base
@@ -19,7 +18,7 @@ class Question(Base):
     __tablename__ = "questions"
 
     id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
+        Uuid(as_uuid=True), primary_key=True, default=uuid.uuid4
     )
     text_fi: Mapped[str] = mapped_column(Text, nullable=False)
     text_en: Mapped[str | None] = mapped_column(Text, nullable=True)

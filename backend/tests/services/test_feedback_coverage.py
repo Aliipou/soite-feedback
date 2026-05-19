@@ -68,13 +68,9 @@ class TestFace4Validation:
             await create_submission(db, payload, uuid.uuid4())
 
     async def test_none_int_value_raises(self, db: AsyncSession, face4_question: Question) -> None:
-        payload = FeedbackSubmitIn(
-            submission_id=uuid.uuid4(),
-            answers=[AnswerIn(question_id=face4_question.id, int_value=None)],
-            submitted_at_local=datetime.now(UTC),
-        )
-        with pytest.raises(FeedbackValidationError, match="face4"):
-            await create_submission(db, payload, uuid.uuid4())
+        # AnswerIn schema rejects int_value=None with no text_value (at_least_one_value validator)
+        with pytest.raises(ValueError):
+            AnswerIn(question_id=face4_question.id, int_value=None)
 
     async def test_missing_face4_raises(
         self, db: AsyncSession, face4_question: Question, scale5_question: Question

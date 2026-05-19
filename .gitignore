@@ -16,6 +16,8 @@ dist/
 *.egg-info/
 htmlcov/
 .coverage
+coverage.xml
+*.log
 
 # Node
 node_modules/

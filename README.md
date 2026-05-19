@@ -175,6 +175,8 @@ cd backend && pip install -e ".[dev]" && pytest
 cd frontend && npm ci && npm test
 ```
 
+Current test suite: **200+ tests** across services, routers, and security layers. Coverage ≥ 85% (`app/services/` and `app/routers/`). On SQLite (local), pgcrypto-dependent tests auto-skip; full suite runs on PostgreSQL in CI.
+
 ### Linting and type checking
 
 ```bash

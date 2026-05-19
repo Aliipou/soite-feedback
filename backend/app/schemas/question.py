@@ -4,7 +4,7 @@ import uuid
 from datetime import datetime
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import AliasPath, BaseModel, ConfigDict, Field
 
 QuestionType = Literal["scale5", "yesno", "text", "face4"]
 
@@ -12,13 +12,13 @@ QuestionType = Literal["scale5", "yesno", "text", "face4"]
 class QuestionOut(BaseModel):
     """Question as returned to the kiosk (active questions only)."""
 
+    model_config = ConfigDict(strict=False, from_attributes=True, populate_by_name=True)
+
     id: uuid.UUID
     text_fi: str
     text_sv: str | None = None
-    type: str = Field(alias="question_type")
-    order: int = Field(alias="display_order")
-
-    model_config = ConfigDict(strict=False, from_attributes=True, populate_by_name=True)
+    type: str = Field(validation_alias="question_type")
+    order: int = Field(validation_alias="display_order")
 
 
 class SurveyQuestionsOut(BaseModel):
@@ -38,8 +38,8 @@ class AdminQuestionOut(BaseModel):
     id: uuid.UUID
     text_fi: str
     text_sv: str | None = None
-    type: str = Field(alias="question_type")
-    order: int = Field(alias="display_order")
+    type: str = Field(validation_alias="question_type")
+    order: int = Field(validation_alias="display_order")
     is_active: bool
     created_at: datetime
     updated_at: datetime

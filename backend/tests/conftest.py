@@ -54,6 +54,12 @@ async def client(db: AsyncSession) -> AsyncGenerator[AsyncClient, None]:
         yield db
 
     app.dependency_overrides[get_db] = override_get_db
+    # Disable rate limiting in tests so they never hit accumulated limits
+    from app.main import limiter as _main_limiter
+    from app.routers.auth import limiter as _auth_limiter
+    from app.routers.public import limiter as _public_limiter
+    for _lim in (_main_limiter, _auth_limiter, _public_limiter):
+        _lim.enabled = False
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as ac:
         yield ac
     app.dependency_overrides.clear()
@@ -239,7 +245,8 @@ def build_feedback_payload(
             answers.append({"question_id": str(q.id), "int_value": 4})
         elif q.question_type == "yesno":
             answers.append({"question_id": str(q.id), "int_value": 1})
-        elif q.question_type == "text":
+        elif q.question_type == "text" and _IS_PG:
+            # pgp_sym_encrypt only available on PostgreSQL — skip text answers on SQLite
             answers.append({"question_id": str(q.id), "text_value": "Good service"})
     payload: dict = {
         "submission_id": str(uuid.uuid4()),

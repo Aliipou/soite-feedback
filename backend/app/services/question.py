@@ -43,8 +43,8 @@ async def create_question(
 ) -> Question:
     """Create a question and write an audit log entry."""
     q = Question(
-        text_fi=nh3.clean(text_fi),
-        text_sv=nh3.clean(text_sv) if text_sv else None,
+        text_fi=nh3.clean(text_fi, tags=frozenset()),
+        text_sv=nh3.clean(text_sv, tags=frozenset()) if text_sv else None,
         question_type=question_type,
         display_order=display_order,
         is_active=True,
@@ -83,9 +83,9 @@ async def update_question(
     }
 
     if text_fi is not None:
-        question.text_fi = nh3.clean(text_fi)
+        question.text_fi = nh3.clean(text_fi, tags=frozenset())
     if text_sv is not None:
-        question.text_sv = nh3.clean(text_sv)
+        question.text_sv = nh3.clean(text_sv, tags=frozenset())
     if display_order is not None:
         question.display_order = display_order
     if is_active is not None:

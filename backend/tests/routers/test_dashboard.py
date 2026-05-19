@@ -263,3 +263,85 @@ class TestAdminEndpoints:
         )
         assert resp.status_code == 200
         assert "csv" in resp.headers.get("content-type", "").lower()
+
+    async def test_admin_create_user_returns_201(
+        self, client: AsyncClient, admin_token: str
+    ) -> None:
+        resp = await client.post(
+            "/api/v1/admin/users",
+            json={"email": "newstaff@soite.fi", "password": "StrongPass123!", "role": "staff"},
+            headers={"Authorization": f"Bearer {admin_token}"},
+        )
+        assert resp.status_code == 201
+        body = resp.json()
+        assert body["email"] == "newstaff@soite.fi"
+        assert body["role"] == "staff"
+        assert body["is_active"] is True
+
+    async def test_admin_create_user_duplicate_email_returns_409(
+        self, client: AsyncClient, admin_token: str, staff_user: object
+    ) -> None:
+        resp = await client.post(
+            "/api/v1/admin/users",
+            json={"email": "staff@soite.fi", "password": "StrongPass123!", "role": "staff"},
+            headers={"Authorization": f"Bearer {admin_token}"},
+        )
+        assert resp.status_code == 409
+
+    async def test_admin_create_user_staff_role_returns_403(
+        self, client: AsyncClient, staff_token: str
+    ) -> None:
+        resp = await client.post(
+            "/api/v1/admin/users",
+            json={"email": "other@soite.fi", "password": "StrongPass123!", "role": "staff"},
+            headers={"Authorization": f"Bearer {staff_token}"},
+        )
+        assert resp.status_code == 403
+
+    async def test_admin_update_user_deactivate(
+        self, client: AsyncClient, admin_token: str, staff_user: object
+    ) -> None:
+        from app.models.user import StaffUser
+        assert isinstance(staff_user, StaffUser)
+        resp = await client.patch(
+            f"/api/v1/admin/users/{staff_user.id}",
+            json={"is_active": False},
+            headers={"Authorization": f"Bearer {admin_token}"},
+        )
+        assert resp.status_code == 200
+        assert resp.json()["is_active"] is False
+
+    async def test_admin_update_user_role(
+        self, client: AsyncClient, admin_token: str, staff_user: object
+    ) -> None:
+        from app.models.user import StaffUser
+        assert isinstance(staff_user, StaffUser)
+        resp = await client.patch(
+            f"/api/v1/admin/users/{staff_user.id}",
+            json={"role": "admin"},
+            headers={"Authorization": f"Bearer {admin_token}"},
+        )
+        assert resp.status_code == 200
+        assert resp.json()["role"] == "admin"
+
+    async def test_admin_update_nonexistent_user_returns_404(
+        self, client: AsyncClient, admin_token: str
+    ) -> None:
+        resp = await client.patch(
+            f"/api/v1/admin/users/{uuid.uuid4()}",
+            json={"is_active": False},
+            headers={"Authorization": f"Bearer {admin_token}"},
+        )
+        assert resp.status_code == 404
+
+    async def test_admin_update_user_requires_admin_role(
+        self, client: AsyncClient, staff_token: str, staff_user: object
+    ) -> None:
+        from app.models.user import StaffUser
+        assert isinstance(staff_user, StaffUser)
+        resp = await client.patch(
+            f"/api/v1/admin/users/{staff_user.id}",
+            json={"is_active": False},
+            headers={"Authorization": f"Bearer {staff_token}"},
+        )
+        assert resp.status_code == 403

@@ -125,13 +125,12 @@ class TestFeedbackSubmission:
         assert resp.json()["received"] is True
 
     async def test_face4_all_values_1_to_4_accepted(
-        self, client: AsyncClient, official_questions: list[Question]
+        self, client: AsyncClient, face4_question: Question
     ) -> None:
-        face4_qs = [q for q in official_questions if q.question_type == "face4"]
         for val in (1, 2, 3, 4):
             payload = {
                 "submission_id": str(uuid.uuid4()),
-                "answers": [{"question_id": str(face4_qs[0].id), "int_value": val}],
+                "answers": [{"question_id": str(face4_question.id), "int_value": val}],
                 "submitted_at_local": datetime.now(UTC).isoformat(),
                 "app_version": "1.0.0",
             }

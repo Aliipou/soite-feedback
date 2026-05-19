@@ -24,7 +24,7 @@ from app.security.password import (
     validate_password_policy,
     verify_password_timing_safe,
 )
-from tests.conftest import build_feedback_payload
+from tests.conftest import _IS_PG, build_feedback_payload
 
 
 class TestPasswordPolicy:
@@ -321,6 +321,7 @@ class TestRefreshTokenSecurity:
 class TestFeedbackSecurity:
     """Feedback endpoint security: input sanitisation, device token validation."""
 
+    @pytest.mark.skipif(not _IS_PG, reason="requires PostgreSQL pgcrypto")
     async def test_sql_injection_in_text_value_stored_safely(
         self,
         client: AsyncClient,
