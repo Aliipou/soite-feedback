@@ -1,0 +1,126 @@
+{
+  "kiosk": {
+    "privacy": {
+      "title": "Tietosuoja",
+      "body": "Tämä kysely on täysin anonyymi. Emme kerää nimeäsi, henkilötunnustasi tai muita tunnistetietoja. Antamiasi vastauksia käytetään vain Soiten kotikuntoutuksen palvelun kehittämiseen.",
+      "start": "Aloita kysely"
+    },
+    "welcome": {
+      "heading": "Hei! Haluatko antaa palautetta?",
+      "subtext": "Kysely on täysin anonyymi ja kestää noin 1 minuutin.",
+      "cta": "Aloita kysely →"
+    },
+    "question": {
+      "next": "Seuraava",
+      "skip": "Ohita",
+      "submit": "Lähetä palaute →",
+      "placeholder": "Kirjoita halutessasi...",
+      "charCount": "{{count}} / 500"
+    },
+    "yesno": {
+      "yes": "Kyllä",
+      "no": "En"
+    },
+    "thankyou": {
+      "heading": "Kiitos palautteestasi!",
+      "subtext": "Palautteesi auttaa meitä kehittämään palveluamme.",
+      "countdown": "Näyttö nollautuu {{seconds}} sekunnin kuluttua..."
+    },
+    "offline": {
+      "notice": "Ei yhteyttä — palautteesi tallennetaan ja lähetetään myöhemmin."
+    },
+    "error": {
+      "loadFailed": "Kysymysten lataus epäonnistui. Yritä uudelleen.",
+      "retry": "Yritä uudelleen"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Kirjaudu sisään",
+      "email": "Sähköpostiosoite",
+      "password": "Salasana",
+      "submit": "Kirjaudu",
+      "error": "Väärä sähköpostiosoite tai salasana",
+      "loading": "Kirjaudutaan..."
+    },
+    "logout": "Kirjaudu ulos"
+  },
+  "dashboard": {
+    "title": "Kotikuntoutus — Palautepaneeli",
+    "nav": {
+      "overview": "Yhteenveto",
+      "freetext": "Vapaamuotoiset",
+      "export": "Vie tiedot"
+    },
+    "summary": {
+      "total": "Vastauksia yhteensä",
+      "week": "Tällä viikolla",
+      "month": "Tässä kuussa",
+      "mean": "Keskiarvo"
+    },
+    "dateRange": {
+      "thisWeek": "Tämä viikko",
+      "thisMonth": "Tämä kuukausi",
+      "custom": "Mukautettu",
+      "from": "Alkaen",
+      "to": "Saakka"
+    },
+    "freetext": {
+      "title": "Vapaamuotoiset vastaukset",
+      "selectQuestion": "Valitse kysymys",
+      "noResults": "Ei vastauksia.",
+      "prev": "Edellinen",
+      "next": "Seuraava",
+      "page": "Sivu {{page}} / {{total}}"
+    },
+    "export": {
+      "title": "Vie tiedot",
+      "notice": "Tiedosto sisältää anonymisoitua dataa.",
+      "download": "Lataa CSV",
+      "loading": "Ladataan..."
+    }
+  },
+  "admin": {
+    "title": "Hallintapaneeli",
+    "tabs": {
+      "questions": "Kysymykset",
+      "users": "Käyttäjät",
+      "export": "Vie tiedot"
+    },
+    "questions": {
+      "add": "Lisää kysymys",
+      "edit": "Muokkaa",
+      "activate": "Aktivoi",
+      "deactivate": "Poista käytöstä",
+      "order": "Järjestys",
+      "text": "Kysymysteksti (FI)",
+      "type": "Tyyppi",
+      "status": "Tila",
+      "active": "Aktiivinen",
+      "inactive": "Ei aktiivinen",
+      "save": "Tallenna",
+      "cancel": "Peruuta",
+      "typeScale": "Asteikko 1–5",
+      "typeYesNo": "Kyllä/Ei",
+      "typeText": "Vapaa teksti"
+    },
+    "users": {
+      "add": "Lisää käyttäjä",
+      "email": "Sähköposti",
+      "role": "Rooli",
+      "lastLogin": "Viimeisin kirjautuminen",
+      "status": "Tila",
+      "deactivate": "Poista käytöstä",
+      "roleStaff": "Henkilöstö",
+      "roleAdmin": "Ylläpitäjä",
+      "active": "Aktiivinen",
+      "inactive": "Ei aktiivinen"
+    },
+    "forbidden": "Sinulla ei ole oikeutta tähän sivuun."
+  },
+  "common": {
+    "loading": "Ladataan...",
+    "error": "Jokin meni pieleen. Yritä uudelleen.",
+    "errorCrash": "Jokin meni pieleen. Pyydä hoitajaa käynnistämään laite uudelleen."
+  }
+}
