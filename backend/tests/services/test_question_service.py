@@ -207,3 +207,48 @@ class TestUserService:
     ) -> None:
         result = await user_svc.get_user_by_email(db, "nonexistent@soite.fi")
         assert result is None
+
+    async def test_get_user_by_id_returns_user(
+        self, db: AsyncSession, staff_user: StaffUser
+    ) -> None:
+        result = await user_svc.get_user_by_id(db, staff_user.id)
+        assert result is not None
+        assert result.id == staff_user.id
+
+    async def test_get_user_by_id_returns_none_for_missing(
+        self, db: AsyncSession
+    ) -> None:
+        result = await user_svc.get_user_by_id(db, uuid.uuid4())
+        assert result is None
+
+    async def test_get_all_users_returns_list(
+        self, db: AsyncSession, staff_user: StaffUser, admin_user: StaffUser
+    ) -> None:
+        users = await user_svc.get_all_users(db)
+        ids = {u.id for u in users}
+        assert staff_user.id in ids
+        assert admin_user.id in ids
+
+    async def test_update_user_role_only(
+        self, db: AsyncSession, admin_user: StaffUser, staff_user: StaffUser
+    ) -> None:
+        updated = await user_svc.update_user(db, staff_user, admin_user.id, role="admin")
+        assert updated.role == "admin"
+        assert updated.is_active is True  # unchanged
+
+    async def test_update_user_audit_captures_before_state(
+        self, db: AsyncSession, admin_user: StaffUser, staff_user: StaffUser
+    ) -> None:
+        from sqlalchemy import select
+        old_role = staff_user.role
+        await user_svc.update_user(db, staff_user, admin_user.id, role="admin")
+        logs = await db.execute(
+            select(AuditLog).where(
+                AuditLog.target_id == staff_user.id,
+                AuditLog.action == "user.update",
+            )
+        )
+        log = logs.scalar_one_or_none()
+        assert log is not None
+        assert log.before_json["role"] == old_role
+        assert log.after_json["role"] == "admin"

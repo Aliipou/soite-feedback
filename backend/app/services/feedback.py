@@ -73,6 +73,12 @@ async def create_submission(
                     "scale5 answer requires int_value 1–5",
                     field=f"answers[question_id={answer.question_id}].int_value",
                 )
+        elif q.question_type == "face4":
+            if answer.int_value is None or not (1 <= answer.int_value <= 4):
+                raise FeedbackValidationError(
+                    "face4 answer requires int_value 1–4",
+                    field=f"answers[question_id={answer.question_id}].int_value",
+                )
         elif q.question_type == "yesno":
             if answer.int_value not in (0, 1):
                 raise FeedbackValidationError(
