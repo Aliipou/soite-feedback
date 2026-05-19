@@ -13,21 +13,27 @@ Paper feedback forms produced 100+ responses/year. After migrating to a web form
 
 **Key design principles:**
 - **Anonymous by design** — zero PII collected; GDPR Article 9 risk eliminated at the source
+- **Bilingual** — Finnish and Swedish; patient selects language at the start of each session
 - **Offline-first** — submissions queue in IndexedDB and sync automatically on reconnect
-- **Accessible** — WCAG 2.1 AA; large Finnish-language text; emoji scale for low digital literacy
+- **Accessible** — WCAG 2.1 AA; large touch-friendly text; 4-face emoji scale for elderly tablet users
 - **Secure** — JWT auth, bcrypt, rate limiting, pgcrypto encryption, HSTS, CSP
 
 ---
 
 ## Survey questions
 
-The kiosk ships with three default questions (editable via the admin panel):
+The kiosk presents 5 face-scale questions followed by an optional free-text field. Patients first select their language (Finnish or Swedish). All questions editable via the admin panel.
 
-| # | Finnish | English | Type |
+| # | Finnish | Swedish | Type |
 |---|---------|---------|------|
-| 1 | Kuinka tyytyväinen olit saamaasi hoitoon? | How satisfied were you with the care you received? | Scale 1–5 |
-| 2 | Saitko riittävästi tietoa kuntoutuksestasi? | Did you receive enough information about your rehabilitation? | Yes / No |
-| 3 | Haluatko antaa muuta palautetta? | Would you like to give any other feedback? | Free text |
+| 1 | Tunsitko, että sinua kuunneltiin ja sinua kohdeltiin kunnioittavasti? | Kände du att du blev lyssnad på och behandlad med respekt? | Face scale (1–4) |
+| 2 | Saitko tarvitsemaasi apua ja ohjausta jakson aikana? | Fick du den hjälp och vägledning du behövde under perioden? | Face scale (1–4) |
+| 3 | Koetko, että hoitoasi koskevat päätökset tehtiin yhteistyössä kanssasi? | Fattades besluten om din vård i samarbete med dig? | Face scale (1–4) |
+| 4 | Koetko, että toimintakykysi on parantunut jakson myötä? | Upplever du att din funktionsförmåga har förbättrats under perioden? | Face scale (1–4) |
+| 5 | Kuinka todennäköisesti suosittelisit palvelua vastaavassa tilanteessa olevalle? | Hur sannolikt är det att du skulle rekommendera tjänsten till någon i en liknande situation? | Face scale (1–4) |
+| 6 | Vapaa sana ja kehitysideat | Fritt ord och utvecklingsidéer | Free text (optional) |
+
+Face scale values: 1 = Erittäin tyytymätön / Mycket missnöjd · 2 = Tyytymätön / Missnöjd · 3 = Tyytyväinen / Nöjd · 4 = Erittäin tyytyväinen / Mycket nöjd
 
 Questions are stored in the database and can be added, reordered, or deactivated at any time without a deploy.
 
@@ -145,7 +151,7 @@ soite-feedback/
         ├── api/              ← typed API clients (axios)
         ├── auth/             ← ProtectedRoute, tokenStore (memory-only, not localStorage)
         ├── offline/          ← IndexedDB queue for offline submissions
-        └── i18n/             ← react-i18next; Finnish primary, English secondary
+        └── i18n/             ← react-i18next; Finnish (fi) + Swedish (sv)
 ```
 
 ---

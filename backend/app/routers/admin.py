@@ -44,7 +44,7 @@ async def create_question(
     q = await question_svc.create_question(
         db,
         text_fi=body.text_fi,
-        text_en=body.text_en,
+        text_sv=body.text_sv,
         question_type=body.type,
         display_order=body.order,
         actor_id=actor_id,
@@ -70,7 +70,7 @@ async def update_question(
     updated = await question_svc.update_question(
         db, q, actor_id,
         text_fi=body.text_fi,
-        text_en=body.text_en,
+        text_sv=body.text_sv,
         display_order=body.order,
         is_active=body.is_active,
     )

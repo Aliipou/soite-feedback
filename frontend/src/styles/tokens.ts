@@ -43,3 +43,17 @@ export const scaleLabels: Record<number, string> = {
   4: "Tyytyväinen",
   5: "Erittäin tyytyväinen",
 };
+
+export const face4Colors: Record<number, string> = {
+  1: colors.scale1,
+  2: colors.scale2,
+  3: colors.scale4,
+  4: colors.scale5,
+};
+
+export const face4Emojis: Record<number, string> = {
+  1: "😞",
+  2: "😕",
+  3: "🙂",
+  4: "😄",
+};

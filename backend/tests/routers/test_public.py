@@ -57,6 +57,33 @@ class TestSurveyQuestions:
         assert "type" in q
         assert "order" in q
 
+    async def test_question_has_text_sv_field(
+        self, client: AsyncClient, face4_question: Question
+    ) -> None:
+        resp = await client.get("/api/v1/survey/questions")
+        assert resp.status_code == 200
+        q = resp.json()["questions"][0]
+        assert "text_sv" in q
+        assert q["text_sv"] == "Kände du att du blev lyssnad på?"
+
+    async def test_face4_question_type_returned(
+        self, client: AsyncClient, face4_question: Question
+    ) -> None:
+        resp = await client.get("/api/v1/survey/questions")
+        assert resp.status_code == 200
+        types = {q["type"] for q in resp.json()["questions"]}
+        assert "face4" in types
+
+    async def test_official_questions_have_fi_and_sv(
+        self, client: AsyncClient, official_questions: list[Question]
+    ) -> None:
+        resp = await client.get("/api/v1/survey/questions")
+        assert resp.status_code == 200
+        for q in resp.json()["questions"]:
+            assert q["text_fi"], f"Missing Finnish text for question {q['id']}"
+            if q["type"] == "face4":
+                assert q["text_sv"], f"Missing Swedish text for face4 question {q['id']}"
+
     async def test_empty_when_no_active_questions(
         self, client: AsyncClient, inactive_question: Question
     ) -> None:
@@ -72,6 +99,53 @@ class TestFeedbackSubmission:
         active_questions: list[Question],
     ) -> None:
         payload = build_feedback_payload(active_questions)
+        resp = await client.post(
+            "/api/v1/feedback",
+            json=payload,
+            headers={"X-Device-Token": str(uuid.uuid4())},
+        )
+        assert resp.status_code == 200
+        assert resp.json()["received"] is True
+
+    async def test_face4_answer_accepted(
+        self, client: AsyncClient, face4_question: Question
+    ) -> None:
+        payload = {
+            "submission_id": str(uuid.uuid4()),
+            "answers": [{"question_id": str(face4_question.id), "int_value": 4}],
+            "submitted_at_local": datetime.now(UTC).isoformat(),
+            "app_version": "1.0.0",
+        }
+        resp = await client.post(
+            "/api/v1/feedback",
+            json=payload,
+            headers={"X-Device-Token": str(uuid.uuid4())},
+        )
+        assert resp.status_code == 200
+        assert resp.json()["received"] is True
+
+    async def test_face4_all_values_1_to_4_accepted(
+        self, client: AsyncClient, official_questions: list[Question]
+    ) -> None:
+        face4_qs = [q for q in official_questions if q.question_type == "face4"]
+        for val in (1, 2, 3, 4):
+            payload = {
+                "submission_id": str(uuid.uuid4()),
+                "answers": [{"question_id": str(face4_qs[0].id), "int_value": val}],
+                "submitted_at_local": datetime.now(UTC).isoformat(),
+                "app_version": "1.0.0",
+            }
+            resp = await client.post(
+                "/api/v1/feedback",
+                json=payload,
+                headers={"X-Device-Token": str(uuid.uuid4())},
+            )
+            assert resp.status_code == 200, f"Value {val} rejected unexpectedly"
+
+    async def test_official_full_survey_submission(
+        self, client: AsyncClient, official_questions: list[Question]
+    ) -> None:
+        payload = build_feedback_payload(official_questions)
         resp = await client.post(
             "/api/v1/feedback",
             json=payload,
@@ -128,7 +202,7 @@ class TestFeedbackSubmission:
             json=payload,
             headers={"X-Device-Token": str(uuid.uuid4())},
         )
-        assert resp.status_code in (422, 200)  # 422 from pydantic or service
+        assert resp.status_code in (422, 200)
 
     async def test_missing_device_token_returns_400(
         self, client: AsyncClient, active_questions: list[Question]
@@ -144,6 +218,23 @@ class TestFeedbackSubmission:
             headers={"X-Device-Token": str(uuid.uuid4()), "Content-Type": "text/plain"},
         )
         assert resp.status_code in (400, 415, 422)
+
+    async def test_freetext_answer_optional_can_be_skipped(
+        self, client: AsyncClient, official_questions: list[Question]
+    ) -> None:
+        face4_qs = [q for q in official_questions if q.question_type == "face4"]
+        payload = {
+            "submission_id": str(uuid.uuid4()),
+            "answers": [{"question_id": str(q.id), "int_value": 3} for q in face4_qs],
+            "submitted_at_local": datetime.now(UTC).isoformat(),
+            "app_version": "1.0.0",
+        }
+        resp = await client.post(
+            "/api/v1/feedback",
+            json=payload,
+            headers={"X-Device-Token": str(uuid.uuid4())},
+        )
+        assert resp.status_code == 200
 
 
 class TestErrorFormat:

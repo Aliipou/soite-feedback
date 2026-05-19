@@ -4,7 +4,7 @@ import type { QuestionType } from "./survey";
 export interface AdminQuestion {
   id: string;
   text_fi: string;
-  text_en: string;
+  text_sv: string | null;
   type: QuestionType;
   order: number;
   is_active: boolean;
@@ -20,14 +20,14 @@ export interface AdminUser {
 
 export interface CreateQuestionPayload {
   text_fi: string;
-  text_en?: string;
+  text_sv?: string;
   type: QuestionType;
   order: number;
 }
 
 export interface UpdateQuestionPayload {
   text_fi?: string;
-  text_en?: string;
+  text_sv?: string;
   order?: number;
   is_active?: boolean;
 }

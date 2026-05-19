@@ -8,6 +8,7 @@ interface Props {
 }
 
 const TYPE_LABELS: Record<string, string> = {
+  face4: "Hymynaamat (4)",
   scale5: "Asteikko 1–5",
   yesno: "Kyllä/Ei",
   text: "Vapaa teksti",

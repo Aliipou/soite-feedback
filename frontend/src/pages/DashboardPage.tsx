@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { Sidebar } from "../components/Sidebar";
 import { SummaryRow } from "../components/dashboard/SummaryRow";
 import { Scale5Chart } from "../components/dashboard/Scale5Chart";
+import { Face4Chart } from "../components/dashboard/Face4Chart";
 import { YesNoChart } from "../components/dashboard/YesNoChart";
 import { DateRangePicker } from "../components/dashboard/DateRangePicker";
 import { fetchSummary } from "../api/dashboard";
@@ -52,6 +53,7 @@ export function DashboardPage() {
 
               <section aria-label="Kysymyskohtaiset tulokset" className="space-y-4">
                 {summary.by_question.map((q) => {
+                  if (q.type === "face4") return <Face4Chart key={q.question_id} question={q} />;
                   if (q.type === "scale5") return <Scale5Chart key={q.question_id} question={q} />;
                   if (q.type === "yesno") return <YesNoChart key={q.question_id} question={q} />;
                   return (

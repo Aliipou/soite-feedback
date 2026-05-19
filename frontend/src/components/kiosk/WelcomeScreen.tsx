@@ -15,15 +15,21 @@ export function WelcomeScreen({ onStart }: Props) {
           <h1 className="text-4xl font-bold text-kiosk-text-primary mb-4">
             {t("kiosk.welcome.heading")}
           </h1>
-          <p className="text-xl text-kiosk-text-secondary">
+          <p className="text-xl text-kiosk-text-secondary mb-3 leading-relaxed">
             {t("kiosk.welcome.subtext")}
+          </p>
+          <p className="text-xl text-kiosk-text-secondary mb-3 leading-relaxed">
+            {t("kiosk.welcome.anonymity")}
+          </p>
+          <p className="text-xl font-semibold text-kiosk-text-primary leading-relaxed">
+            {t("kiosk.welcome.instruction")}
           </p>
         </div>
 
         <button
           type="button"
           onClick={onStart}
-          className="w-full min-h-touch text-button-lg font-semibold text-white bg-kiosk-primary hover:bg-kiosk-primary-hover rounded-2xl transition-colors focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-kiosk-primary/50 shadow-md"
+          className="w-full min-h-touch text-button-lg font-semibold text-white bg-kiosk-primary hover:bg-kiosk-primary-hover active:scale-95 rounded-2xl transition-all duration-150 focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-kiosk-primary/50 shadow-md"
           autoFocus
         >
           {t("kiosk.welcome.cta")}

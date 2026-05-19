@@ -36,7 +36,7 @@ async def get_question_by_id(db: AsyncSession, question_id: uuid.UUID) -> Questi
 async def create_question(
     db: AsyncSession,
     text_fi: str,
-    text_en: str | None,
+    text_sv: str | None,
     question_type: str,
     display_order: int,
     actor_id: uuid.UUID,
@@ -44,7 +44,7 @@ async def create_question(
     """Create a question and write an audit log entry."""
     q = Question(
         text_fi=nh3.clean(text_fi),
-        text_en=nh3.clean(text_en) if text_en else None,
+        text_sv=nh3.clean(text_sv) if text_sv else None,
         question_type=question_type,
         display_order=display_order,
         is_active=True,
@@ -70,22 +70,22 @@ async def update_question(
     question: Question,
     actor_id: uuid.UUID,
     text_fi: str | None = None,
-    text_en: str | None = None,
+    text_sv: str | None = None,
     display_order: int | None = None,
     is_active: bool | None = None,
 ) -> Question:
     """Update allowed fields and write audit log."""
     before = {
         "text_fi": question.text_fi,
-        "text_en": question.text_en,
+        "text_sv": question.text_sv,
         "display_order": question.display_order,
         "is_active": question.is_active,
     }
 
     if text_fi is not None:
         question.text_fi = nh3.clean(text_fi)
-    if text_en is not None:
-        question.text_en = nh3.clean(text_en)
+    if text_sv is not None:
+        question.text_sv = nh3.clean(text_sv)
     if display_order is not None:
         question.display_order = display_order
     if is_active is not None:
@@ -101,7 +101,7 @@ async def update_question(
         before_json=before,
         after_json={
             "text_fi": question.text_fi,
-            "text_en": question.text_en,
+            "text_sv": question.text_sv,
             "display_order": question.display_order,
             "is_active": question.is_active,
         },

@@ -10,7 +10,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 
 from app.database import Base
 
-QuestionType = Literal["scale5", "yesno", "text"]
+QuestionType = Literal["scale5", "yesno", "text", "face4"]
 
 
 class Question(Base):
@@ -23,10 +23,11 @@ class Question(Base):
     )
     text_fi: Mapped[str] = mapped_column(Text, nullable=False)
     text_en: Mapped[str | None] = mapped_column(Text, nullable=True)
+    text_sv: Mapped[str | None] = mapped_column(Text, nullable=True)
     question_type: Mapped[str] = mapped_column(
         String(16),
         nullable=False,
-        comment="scale5 | yesno | text",
+        comment="scale5 | yesno | text | face4",
     )
     display_order: Mapped[int] = mapped_column(SmallInteger, nullable=False, default=0)
     is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)

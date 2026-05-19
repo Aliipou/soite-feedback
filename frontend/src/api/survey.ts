@@ -1,11 +1,11 @@
 import api from "./axios";
 
-export type QuestionType = "scale5" | "yesno" | "text";
+export type QuestionType = "scale5" | "yesno" | "text" | "face4";
 
 export interface Question {
   id: string;
   text_fi: string;
-  text_en: string;
+  text_sv: string | null;
   type: QuestionType;
   order: number;
 }

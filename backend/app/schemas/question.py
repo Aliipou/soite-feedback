@@ -6,17 +6,15 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
-QuestionType = Literal["scale5", "yesno", "text"]
+QuestionType = Literal["scale5", "yesno", "text", "face4"]
 
 
 class QuestionOut(BaseModel):
     """Question as returned to the kiosk (active questions only)."""
 
-    model_config = ConfigDict(strict=True, from_attributes=True)
-
     id: uuid.UUID
     text_fi: str
-    text_en: str | None = None
+    text_sv: str | None = None
     type: str = Field(alias="question_type")
     order: int = Field(alias="display_order")
 
@@ -39,7 +37,7 @@ class AdminQuestionOut(BaseModel):
 
     id: uuid.UUID
     text_fi: str
-    text_en: str | None = None
+    text_sv: str | None = None
     type: str = Field(alias="question_type")
     order: int = Field(alias="display_order")
     is_active: bool
@@ -53,7 +51,7 @@ class CreateQuestionIn(BaseModel):
     model_config = ConfigDict(strict=True)
 
     text_fi: str = Field(min_length=1, max_length=500)
-    text_en: str | None = Field(default=None, max_length=500)
+    text_sv: str | None = Field(default=None, max_length=500)
     type: QuestionType
     order: int = Field(ge=0, le=1000)
 
@@ -64,6 +62,6 @@ class UpdateQuestionIn(BaseModel):
     model_config = ConfigDict(strict=True)
 
     text_fi: str | None = Field(default=None, min_length=1, max_length=500)
-    text_en: str | None = Field(default=None, max_length=500)
+    text_sv: str | None = Field(default=None, max_length=500)
     order: int | None = Field(default=None, ge=0, le=1000)
     is_active: bool | None = None

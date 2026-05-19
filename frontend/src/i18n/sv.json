@@ -1,0 +1,141 @@
+{
+  "kiosk": {
+    "language": {
+      "select": "Valitse kieli / Välj språk"
+    },
+    "privacy": {
+      "title": "Dataskydd",
+      "body": "Denna enkät är helt anonym. Vi samlar inte in ditt namn, personnummer eller andra identifieringsuppgifter. Dina svar används enbart för att utveckla Soites hemrehabilitering.",
+      "start": "Fortsätt →"
+    },
+    "welcome": {
+      "heading": "Bästa kund,",
+      "subtext": "Din åsikt är viktig för oss. Vi använder din feedback för att utveckla vår service.",
+      "anonymity": "Svarandet är anonymt och påverkar inte dina tjänster eller din vård.",
+      "instruction": "Välj den smiley som bäst beskriver ditt svar.",
+      "cta": "Börja svara →"
+    },
+    "face4": {
+      "label": "Välj den smiley som bäst beskriver ditt svar.",
+      "4": "Mycket nöjd",
+      "3": "Nöjd",
+      "2": "Missnöjd",
+      "1": "Mycket missnöjd"
+    },
+    "question": {
+      "next": "Nästa",
+      "skip": "Hoppa över",
+      "submit": "Skicka feedback →",
+      "placeholder": "Skriv om du vill...",
+      "charCount": "{{count}} / 500"
+    },
+    "yesno": {
+      "yes": "Ja",
+      "no": "Nej"
+    },
+    "thankyou": {
+      "heading": "Tack för ditt svar!",
+      "subtext": "Din feedback hjälper oss att utveckla vår service.",
+      "subtextQueued": "Din feedback har sparats på enheten och skickas automatiskt när nätverksanslutningen är tillgänglig igen.",
+      "countdown": "Skärmen återställs om {{seconds}} sekunder..."
+    },
+    "offline": {
+      "notice": "Ingen anslutning — din feedback sparas och skickas senare."
+    },
+    "error": {
+      "loadFailed": "Laddning av frågor misslyckades. Försök igen.",
+      "retry": "Försök igen"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Logga in",
+      "email": "E-postadress",
+      "password": "Lösenord",
+      "submit": "Logga in",
+      "error": "Felaktig e-postadress eller lösenord",
+      "loading": "Loggar in..."
+    },
+    "logout": "Logga ut"
+  },
+  "dashboard": {
+    "title": "Hemrehabilitering — Feedbackpanel",
+    "nav": {
+      "overview": "Översikt",
+      "freetext": "Fritextsvar",
+      "export": "Exportera data"
+    },
+    "summary": {
+      "total": "Svar totalt",
+      "week": "Denna vecka",
+      "month": "Denna månad",
+      "mean": "Medelvärde"
+    },
+    "dateRange": {
+      "thisWeek": "Denna vecka",
+      "thisMonth": "Denna månad",
+      "custom": "Anpassad",
+      "from": "Från",
+      "to": "Till"
+    },
+    "freetext": {
+      "title": "Fritextsvar",
+      "selectQuestion": "Välj fråga",
+      "noResults": "Inga svar.",
+      "prev": "Föregående",
+      "next": "Nästa",
+      "page": "Sida {{page}} / {{total}}"
+    },
+    "export": {
+      "title": "Exportera data",
+      "notice": "Filen innehåller anonymiserad data.",
+      "download": "Ladda ner CSV",
+      "loading": "Laddar..."
+    }
+  },
+  "admin": {
+    "title": "Adminpanel",
+    "tabs": {
+      "questions": "Frågor",
+      "users": "Användare",
+      "export": "Exportera data"
+    },
+    "questions": {
+      "add": "Lägg till fråga",
+      "edit": "Redigera",
+      "activate": "Aktivera",
+      "deactivate": "Inaktivera",
+      "order": "Ordning",
+      "text": "Frågetext (FI)",
+      "textSv": "Frågetext (SV)",
+      "type": "Typ",
+      "status": "Status",
+      "active": "Aktiv",
+      "inactive": "Inaktiv",
+      "save": "Spara",
+      "cancel": "Avbryt",
+      "typeScale": "Skala 1–5",
+      "typeYesNo": "Ja/Nej",
+      "typeText": "Fritext",
+      "typeFace4": "Smileys (4)"
+    },
+    "users": {
+      "add": "Lägg till användare",
+      "email": "E-post",
+      "role": "Roll",
+      "lastLogin": "Senaste inloggning",
+      "status": "Status",
+      "deactivate": "Inaktivera",
+      "roleStaff": "Personal",
+      "roleAdmin": "Administratör",
+      "active": "Aktiv",
+      "inactive": "Inaktiv"
+    },
+    "forbidden": "Du har inte behörighet till denna sida."
+  },
+  "common": {
+    "loading": "Laddar...",
+    "error": "Något gick fel. Försök igen.",
+    "errorCrash": "Något gick fel. Be en skötare starta om enheten."
+  }
+}

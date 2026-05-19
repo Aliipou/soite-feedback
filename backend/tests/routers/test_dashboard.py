@@ -66,6 +66,27 @@ class TestDashboardSummary:
         assert resp.status_code == 200
 
 
+    async def test_face4_questions_appear_in_summary(
+        self,
+        client: AsyncClient,
+        staff_token: str,
+        official_questions,
+    ) -> None:
+        device = str(uuid.uuid4())
+        await client.post(
+            "/api/v1/feedback",
+            json=build_feedback_payload(official_questions),
+            headers={"X-Device-Token": device},
+        )
+        resp = await client.get(
+            "/api/v1/dashboard/summary",
+            headers={"Authorization": f"Bearer {staff_token}"},
+        )
+        assert resp.status_code == 200
+        types = {q["type"] for q in resp.json()["by_question"]}
+        assert "face4" in types
+
+
 class TestDashboardFreetext:
     async def test_requires_auth(self, client: AsyncClient) -> None:
         resp = await client.get(f"/api/v1/dashboard/freetext?question_id={uuid.uuid4()}")
@@ -143,6 +164,38 @@ class TestAdminEndpoints:
         assert resp.status_code == 201
         body = resp.json()
         assert body["text_fi"] == "Test question?"
+
+    async def test_admin_create_face4_question(
+        self, client: AsyncClient, admin_token: str
+    ) -> None:
+        resp = await client.post(
+            "/api/v1/admin/questions",
+            json={
+                "text_fi": "Hymynaama kysymys?",
+                "text_sv": "Smiley fråga?",
+                "type": "face4",
+                "order": 20,
+            },
+            headers={"Authorization": f"Bearer {admin_token}"},
+        )
+        assert resp.status_code == 201
+        body = resp.json()
+        assert body["type"] == "face4"
+        assert body["text_sv"] == "Smiley fråga?"
+
+    async def test_admin_update_question_sv_text(
+        self,
+        client: AsyncClient,
+        admin_token: str,
+        scale5_question,
+    ) -> None:
+        resp = await client.patch(
+            f"/api/v1/admin/questions/{scale5_question.id}",
+            json={"text_sv": "Ny svensk text?"},
+            headers={"Authorization": f"Bearer {admin_token}"},
+        )
+        assert resp.status_code == 200
+        assert resp.json()["text_sv"] == "Ny svensk text?"
 
     async def test_admin_update_question_active_status(
         self,

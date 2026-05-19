@@ -1,14 +1,26 @@
 {
   "kiosk": {
+    "language": {
+      "select": "Valitse kieli / Välj språk"
+    },
     "privacy": {
       "title": "Tietosuoja",
       "body": "Tämä kysely on täysin anonyymi. Emme kerää nimeäsi, henkilötunnustasi tai muita tunnistetietoja. Antamiasi vastauksia käytetään vain Soiten kotikuntoutuksen palvelun kehittämiseen.",
-      "start": "Aloita kysely"
+      "start": "Jatka →"
     },
     "welcome": {
-      "heading": "Hei! Haluatko antaa palautetta?",
-      "subtext": "Kysely on täysin anonyymi ja kestää noin 1 minuutin.",
+      "heading": "Arvoisa asiakas,",
+      "subtext": "Mielipiteesi on meille tärkeä. Käytämme palautettasi palvelumme kehittämiseen.",
+      "anonymity": "Vastaaminen on anonyymiä, eikä se vaikuta palveluihisi tai hoitoosi.",
+      "instruction": "Valitse vastaustasi parhaiten kuvaava hymynaama.",
       "cta": "Aloita kysely →"
+    },
+    "face4": {
+      "label": "Valitse vastaustasi parhaiten kuvaava hymynaama.",
+      "4": "Erittäin tyytyväinen",
+      "3": "Tyytyväinen",
+      "2": "Tyytymätön",
+      "1": "Erittäin tyytymätön"
     },
     "question": {
       "next": "Seuraava",
@@ -22,7 +34,7 @@
       "no": "En"
     },
     "thankyou": {
-      "heading": "Kiitos palautteestasi!",
+      "heading": "Kiitos vastauksestasi!",
       "subtext": "Palautteesi auttaa meitä kehittämään palveluamme.",
       "subtextQueued": "Palautteesi on tallennettu laitteelle ja lähetetään automaattisesti, kun verkkoyhteys on jälleen käytettävissä.",
       "countdown": "Näyttö nollautuu {{seconds}} sekunnin kuluttua..."
@@ -95,6 +107,7 @@
       "deactivate": "Poista käytöstä",
       "order": "Järjestys",
       "text": "Kysymysteksti (FI)",
+      "textSv": "Kysymysteksti (SV)",
       "type": "Tyyppi",
       "status": "Tila",
       "active": "Aktiivinen",
@@ -103,7 +116,8 @@
       "cancel": "Peruuta",
       "typeScale": "Asteikko 1–5",
       "typeYesNo": "Kyllä/Ei",
-      "typeText": "Vapaa teksti"
+      "typeText": "Vapaa teksti",
+      "typeFace4": "Hymynaamat (4)"
     },
     "users": {
       "add": "Lisää käyttäjä",

@@ -101,6 +101,20 @@ async def text_question(db: AsyncSession) -> Question:
 
 
 @pytest_asyncio.fixture
+async def face4_question(db: AsyncSession) -> Question:
+    q = Question(
+        text_fi="Tunsitko, että sinua kuunneltiin?",
+        text_sv="Kände du att du blev lyssnad på?",
+        question_type="face4",
+        display_order=10,
+        is_active=True,
+    )
+    db.add(q)
+    await db.flush()
+    return q
+
+
+@pytest_asyncio.fixture
 async def inactive_question(db: AsyncSession) -> Question:
     q = Question(
         text_fi="Inactive question",
@@ -120,6 +134,31 @@ async def active_questions(
     text_question: Question,
 ) -> list[Question]:
     return [scale5_question, yesno_question, text_question]
+
+
+@pytest_asyncio.fixture
+async def official_questions(db: AsyncSession) -> list[Question]:
+    """The 5 official face4 questions + 1 free-text, matching production seed."""
+    questions = []
+    for i, (fi_text, sv_text, qtype) in enumerate([
+        ("Tunsitko, että sinua kuunneltiin?", "Kände du att du blev lyssnad på?", "face4"),
+        ("Saitko tarvitsemaasi apua?", "Fick du den hjälp du behövde?", "face4"),
+        ("Päätökset tehtiin yhteistyössä?", "Fattades besluten i samarbete?", "face4"),
+        ("Toimintakykysi parani?", "Har din funktionsförmåga förbättrats?", "face4"),
+        ("Suosittelisitko palvelua?", "Skulle du rekommendera tjänsten?", "face4"),
+        ("Vapaa sana", "Fritt ord", "text"),
+    ], start=1):
+        q = Question(
+            text_fi=fi_text,
+            text_sv=sv_text,
+            question_type=qtype,
+            display_order=i * 10,
+            is_active=True,
+        )
+        db.add(q)
+        await db.flush()
+        questions.append(q)
+    return questions
 
 
 # ── Fixtures: user helpers ─────────────────────────────────────────────────────
@@ -196,7 +235,7 @@ def build_feedback_payload(
 ) -> dict:
     answers = []
     for q in questions:
-        if q.question_type == "scale5":
+        if q.question_type in ("scale5", "face4"):
             answers.append({"question_id": str(q.id), "int_value": 4})
         elif q.question_type == "yesno":
             answers.append({"question_id": str(q.id), "int_value": 1})

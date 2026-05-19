@@ -12,9 +12,9 @@ interface Props {
 export function QuestionModal({ question, onSave, onClose }: Props) {
   const { t } = useTranslation();
   const [textFi, setTextFi] = useState(question?.text_fi ?? "");
-  const [textEn, setTextEn] = useState(question?.text_en ?? "");
-  const [type, setType] = useState<QuestionType>(question?.type ?? "scale5");
-  const [order, setOrder] = useState(question?.order ?? 1);
+  const [textSv, setTextSv] = useState(question?.text_sv ?? "");
+  const [type, setType] = useState<QuestionType>(question?.type ?? "face4");
+  const [order, setOrder] = useState(question?.order ?? 10);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const firstInputRef = useRef<HTMLInputElement>(null);
@@ -28,7 +28,12 @@ export function QuestionModal({ question, onSave, onClose }: Props) {
     setSaving(true);
     setError(null);
     try {
-      await onSave({ text_fi: textFi.trim(), text_en: textEn.trim() || undefined, type, order });
+      await onSave({
+        text_fi: textFi.trim(),
+        text_sv: textSv.trim() || undefined,
+        type,
+        order,
+      });
       onClose();
     } catch {
       setError(t("common.error"));
@@ -66,14 +71,14 @@ export function QuestionModal({ question, onSave, onClose }: Props) {
           </div>
 
           <div>
-            <label htmlFor="q-text-en" className="block text-sm font-medium text-gray-700 mb-1">
-              English text (optional)
+            <label htmlFor="q-text-sv" className="block text-sm font-medium text-gray-700 mb-1">
+              {t("admin.questions.textSv")}
             </label>
             <input
-              id="q-text-en"
+              id="q-text-sv"
               type="text"
-              value={textEn}
-              onChange={(e) => setTextEn(e.target.value)}
+              value={textSv}
+              onChange={(e) => setTextSv(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-dash-accent text-sm"
               maxLength={500}
             />
@@ -90,9 +95,10 @@ export function QuestionModal({ question, onSave, onClose }: Props) {
                 onChange={(e) => setType(e.target.value as QuestionType)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-dash-accent text-sm"
               >
+                <option value="face4">{t("admin.questions.typeFace4")}</option>
+                <option value="text">{t("admin.questions.typeText")}</option>
                 <option value="scale5">{t("admin.questions.typeScale")}</option>
                 <option value="yesno">{t("admin.questions.typeYesNo")}</option>
-                <option value="text">{t("admin.questions.typeText")}</option>
               </select>
             </div>
 

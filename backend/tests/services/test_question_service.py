@@ -46,8 +46,8 @@ class TestQuestionService:
         q = await question_svc.create_question(
             db,
             text_fi="Test?",
-            text_en="Test?",
-            question_type="scale5",
+            text_sv="Test?",
+            question_type="face4",
             display_order=10,
             actor_id=admin_user.id,
         )
@@ -60,18 +60,52 @@ class TestQuestionService:
         )
         assert logs.scalar_one_or_none() is not None
 
+    async def test_create_question_stores_sv_text(
+        self, db: AsyncSession, admin_user: StaffUser
+    ) -> None:
+        q = await question_svc.create_question(
+            db,
+            text_fi="Suomenkielinen kysymys?",
+            text_sv="Svensk fråga?",
+            question_type="face4",
+            display_order=10,
+            actor_id=admin_user.id,
+        )
+        assert q.text_sv == "Svensk fråga?"
+
     async def test_create_question_strips_html(
         self, db: AsyncSession, admin_user: StaffUser
     ) -> None:
         q = await question_svc.create_question(
             db,
             text_fi="<b>Bold</b> question?",
-            text_en=None,
+            text_sv=None,
             question_type="yesno",
             display_order=5,
             actor_id=admin_user.id,
         )
         assert "<b>" not in q.text_fi
+
+    async def test_create_face4_question_type_accepted(
+        self, db: AsyncSession, admin_user: StaffUser
+    ) -> None:
+        q = await question_svc.create_question(
+            db,
+            text_fi="Hymynaama?",
+            text_sv="Smiley?",
+            question_type="face4",
+            display_order=20,
+            actor_id=admin_user.id,
+        )
+        assert q.question_type == "face4"
+
+    async def test_update_question_sv_text(
+        self, db: AsyncSession, admin_user: StaffUser, scale5_question: Question
+    ) -> None:
+        updated = await question_svc.update_question(
+            db, scale5_question, admin_user.id, text_sv="Uppdaterad fråga?"
+        )
+        assert updated.text_sv == "Uppdaterad fråga?"
 
     async def test_update_question_writes_before_after_audit(
         self, db: AsyncSession, admin_user: StaffUser, scale5_question: Question
@@ -99,6 +133,23 @@ class TestQuestionService:
     ) -> None:
         result = await question_svc.get_question_by_id(db, uuid.uuid4())
         assert result is None
+
+    async def test_official_face4_questions_available(
+        self, db: AsyncSession, official_questions: list[Question]
+    ) -> None:
+        active = await question_svc.get_active_questions(db)
+        face4_count = sum(1 for q in active if q.question_type == "face4")
+        text_count = sum(1 for q in active if q.question_type == "text")
+        assert face4_count == 5
+        assert text_count == 1
+
+    async def test_official_questions_have_sv_text(
+        self, db: AsyncSession, official_questions: list[Question]
+    ) -> None:
+        active = await question_svc.get_active_questions(db)
+        for q in active:
+            if q.question_type == "face4":
+                assert q.text_sv is not None, f"Question {q.text_fi!r} missing Swedish text"
 
 
 class TestUserService:

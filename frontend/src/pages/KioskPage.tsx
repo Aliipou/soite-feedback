@@ -6,24 +6,33 @@ import { useOnlineStatus } from "../hooks/useOnlineStatus";
 import { submitFeedback, getDeviceToken } from "../api/feedback";
 import type { Answer } from "../api/feedback";
 import { enqueue } from "../offline/queue";
+import { LanguageSelectScreen } from "../components/kiosk/LanguageSelectScreen";
 import { PrivacyNoticeScreen } from "../components/kiosk/PrivacyNoticeScreen";
 import { WelcomeScreen } from "../components/kiosk/WelcomeScreen";
 import { QuestionScreen } from "../components/kiosk/QuestionScreen";
 import { ThankYouScreen } from "../components/kiosk/ThankYouScreen";
 
-type Stage = "privacy" | "welcome" | "questions" | "thankyou";
+type Stage = "language" | "privacy" | "welcome" | "questions" | "thankyou";
 
 const APP_VERSION = "1.0.0";
 
 export function KioskPage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { questions, loading, error, refetch } = useQuestions();
   const isOnline = useOnlineStatus();
 
-  const [stage, setStage] = useState<Stage>("privacy");
+  const [stage, setStage] = useState<Stage>("language");
   const [questionIndex, setQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<Answer[]>([]);
   const [offlineQueued, setOfflineQueued] = useState(false);
+
+  const handleLanguageSelect = useCallback(
+    (lang: "fi" | "sv") => {
+      void i18n.changeLanguage(lang);
+      setStage("privacy");
+    },
+    [i18n]
+  );
 
   const handleAnswer = useCallback(
     async (answer: Answer) => {
@@ -59,11 +68,12 @@ export function KioskPage() {
   );
 
   const handleReset = useCallback(() => {
-    setStage("privacy");
+    setStage("language");
     setQuestionIndex(0);
     setAnswers([]);
     setOfflineQueued(false);
-  }, []);
+    void i18n.changeLanguage("fi");
+  }, [i18n]);
 
   if (loading) {
     return (
@@ -91,7 +101,7 @@ export function KioskPage() {
 
   return (
     <div className="min-h-screen bg-kiosk-bg">
-      {!isOnline && (
+      {!isOnline && stage !== "language" && (
         <div
           className="bg-amber-50 border-b border-amber-200 px-4 py-2 text-center text-sm text-amber-700"
           role="status"
@@ -101,6 +111,7 @@ export function KioskPage() {
         </div>
       )}
 
+      {stage === "language" && <LanguageSelectScreen onSelect={handleLanguageSelect} />}
       {stage === "privacy" && <PrivacyNoticeScreen onStart={() => setStage("welcome")} />}
       {stage === "welcome" && <WelcomeScreen onStart={() => setStage("questions")} />}
       {stage === "questions" && questions[questionIndex] && (

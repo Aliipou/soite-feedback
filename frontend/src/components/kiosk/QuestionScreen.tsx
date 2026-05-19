@@ -1,9 +1,11 @@
+import { useTranslation } from "react-i18next";
 import type { Question } from "../../api/survey";
 import type { Answer } from "../../api/feedback";
 import { ProgressDots } from "./ProgressDots";
 import { Scale5Input } from "./Scale5Input";
 import { YesNoInput } from "./YesNoInput";
 import { TextInput } from "./TextInput";
+import { Face4Input } from "./Face4Input";
 
 interface Props {
   question: Question;
@@ -13,6 +15,11 @@ interface Props {
 }
 
 export function QuestionScreen({ question, questionIndex, totalQuestions, onAnswer }: Props) {
+  const { i18n } = useTranslation();
+
+  const questionText =
+    i18n.language === "sv" && question.text_sv ? question.text_sv : question.text_fi;
+
   const handleScale = (value: number) => {
     onAnswer({ question_id: question.id, int_value: value });
   };
@@ -35,10 +42,13 @@ export function QuestionScreen({ question, questionIndex, totalQuestions, onAnsw
         className="text-question text-kiosk-text-primary text-center leading-snug"
         id="question-heading"
       >
-        {question.text_fi}
+        {questionText}
       </h1>
 
       <div className="w-full" role="region" aria-labelledby="question-heading">
+        {question.type === "face4" && (
+          <Face4Input onSelect={handleScale} />
+        )}
         {question.type === "scale5" && (
           <Scale5Input onSelect={handleScale} />
         )}
