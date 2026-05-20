@@ -1,4 +1,5 @@
 # Soite Kotikuntoutus — Feedback System
+deployed:https://soite-feedback-2tlgoy77i-aliipous-projects.vercel.app/
 
 > A production-grade, anonymous patient feedback kiosk for **Soite's home rehabilitation team** (kotikuntoutus) in Kokkola, Finland.
 >
