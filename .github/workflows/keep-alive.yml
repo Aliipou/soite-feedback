@@ -1,0 +1,15 @@
+name: Keep Backend Alive
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping
+        run: |
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://soite-feedback-backend.onrender.com/health)
+          echo "Status: $STATUS"
