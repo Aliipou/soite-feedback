@@ -1,4 +1,9 @@
 # Soite Kotikuntoutus — Feedback System
+
+## Live Demo
+**Frontend:** [https://soite-feedback.vercel.app](https://soite-feedback.vercel.app)
+**API:** [https://soite-feedback-backend.onrender.com/health](https://soite-feedback-backend.onrender.com/health)
+
 Demo:https://soite-feedback-2tlgoy77i-aliipous-projects.vercel.app/
 
 > A production-grade, anonymous patient feedback kiosk for **Soite's home rehabilitation team** (kotikuntoutus) in Kokkola, Finland.
